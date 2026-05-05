@@ -54,7 +54,7 @@ def run_simulation(req: SimulationRequest):
 @app.post("/recommend")
 def get_recommendations(data: RoutineData):
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-3-flash-preview')
         score = calculate_productivity(data)
         
         # Use the role provided in the request, ensuring it's valid
@@ -128,7 +128,7 @@ class ChatRequest(BaseModel):
 @app.post("/chat")
 def chat_with_twin(req: ChatRequest):
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-3-flash-preview')
         # Safer role extraction
         role_raw = req.data.role or "Student"
         role = role_raw.upper() if role_raw.upper() in ["STUDENT", "PROFESSIONAL"] else "STUDENT"
