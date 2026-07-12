@@ -19,8 +19,9 @@ const allowedOrigins = [
   "https://dtwinai.vercel.app"
 ];
 
-// Vercel preview deployments follow the pattern: https://<project>-<hash>-<team>.vercel.app
-const vercelPreviewPattern = /^https:\/\/[a-zA-Z0-9-]+-[a-zA-Z0-9]+-[a-zA-Z0-9]+\.vercel\.app$/;
+// Allow all Vercel preview deployments (*.vercel.app)
+// Team slugs can contain hyphens so a simple subdomain wildcard is safest
+const vercelPreviewPattern = /^https:\/\/[a-zA-Z0-9][a-zA-Z0-9-]*\.vercel\.app$/;
 
 const corsOptions = {
   origin: function (origin, callback) {
