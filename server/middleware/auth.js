@@ -13,7 +13,7 @@ module.exports = function (req, res, next) {
 
     // Verify token
     try {
-        const secret = 'secrettokentemp';
+        const secret = process.env.JWT_SECRET || 'secrettokentemp';
         console.log('AUTH MIDDLEWARE: Verifying token...');
         const decoded = jwt.verify(token, secret);
 

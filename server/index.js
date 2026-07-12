@@ -15,26 +15,33 @@ connectDB();
 // Middleware
 const allowedOrigins = [
   "http://localhost:5173",
+  "http://localhost:5673",
   "https://dtwinai.vercel.app"
 ];
 
-app.use(cors({
+// Vercel preview deployments follow the pattern: https://<project>-<hash>-<team>.vercel.app
+const vercelPreviewPattern = /^https:\/\/[a-zA-Z0-9-]+-[a-zA-Z0-9]+-[a-zA-Z0-9]+\.vercel\.app$/;
+
+const corsOptions = {
   origin: function (origin, callback) {
-    // Allow requests with no origin (Postman, curl, etc.)
+    // Allow requests with no origin (Postman, curl, mobile apps, server-to-server)
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.includes(origin)) {
+    if (allowedOrigins.includes(origin) || vercelPreviewPattern.test(origin)) {
       return callback(null, true);
     }
 
-    return callback(new Error("Not allowed by CORS"));
+    return callback(new Error(`CORS: Origin '${origin}' not allowed`));
   },
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
-}));
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  credentials: true,
+  optionsSuccessStatus: 200 // Some legacy browsers (IE11) choke on 204
+};
 
-app.options("*", cors());
+// Apply CORS to all routes — OPTIONS preflight uses the same origin whitelist
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
 app.use((req, res, next) => {
