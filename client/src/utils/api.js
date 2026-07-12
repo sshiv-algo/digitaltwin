@@ -1,17 +1,14 @@
 import axios from 'axios';
 
-// In Vercel: set VITE_API_URL = https://digitaltwin-lond.onrender.com/api
-// Locally:   it falls back to the Render URL automatically
-const BASE_URL = import.meta.env.VITE_API_URL || 'https://digitaltwin-lond.onrender.com/api';
-
+// Requests go to /api/* which is proxied to Render by:
+//   - vercel.json rewrites (on Vercel production + preview deployments)
+//   - vite.config.js proxy (local development)
 const api = axios.create({
-    baseURL: BASE_URL,
+    baseURL: '/api',
     headers: {
         'Content-Type': 'application/json'
-    },
-    // REQUIRED: must match server's `credentials: true` CORS setting
-    // Without this the browser strips the Authorization header on cross-origin requests
-    withCredentials: true
+    }
+    // No withCredentials needed — requests are same-origin through the proxy
 });
 
 api.interceptors.request.use(
