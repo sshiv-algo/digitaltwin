@@ -61,6 +61,18 @@ app.use('/api/admin', require('./routes/admin'));
 
 app.get('/ping', (req, res) => res.send('pong'));
 
+// Global error handler — MUST be after all routes
+// Ensures CORS headers are set even on 500 errors so the browser can read the error body
+app.use((err, req, res, next) => {
+    const origin = req.headers.origin;
+    if (origin && (allowedOrigins.includes(origin) || vercelPreviewPattern.test(origin))) {
+        res.header('Access-Control-Allow-Origin', origin);
+        res.header('Access-Control-Allow-Credentials', 'true');
+    }
+    console.error('Unhandled error:', err.message);
+    res.status(500).json({ success: false, message: err.message || 'Internal Server Error' });
+});
+
 const PORT = process.env.PORT || 5604;
 
 app.listen(PORT, '0.0.0.0', () => console.log(`Server started on port ${PORT} at 0.0.0.0`));
