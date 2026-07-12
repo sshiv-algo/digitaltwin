@@ -16,5 +16,21 @@ export default defineConfig({
         secure: true
       }
     }
+  },
+  build: {
+    // Suppress the warning; heavy 3D/chart libs are expected to be large
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        // Split large vendor libs into separate chunks for better caching
+        manualChunks: {
+          'vendor-three':    ['three', '@react-three/fiber', '@react-three/drei'],
+          'vendor-charts':   ['recharts'],
+          'vendor-motion':   ['framer-motion'],
+          'vendor-react':    ['react', 'react-dom', 'react-router-dom'],
+          'vendor-pdf':      ['jspdf', 'jspdf-autotable'],
+        }
+      }
+    }
   }
 })
