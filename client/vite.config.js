@@ -11,7 +11,7 @@ export default defineConfig({
       // Proxies /api/* to Render backend during local development
       // This mirrors the vercel.json rewrite so the same relative /api URL works everywhere
       '/api': {
-        target: 'https://digitaltwin-lond.onrender.com',
+        target: 'https://digitaltwin-1ond.onrender.com',
         changeOrigin: true,
         secure: true
       }
