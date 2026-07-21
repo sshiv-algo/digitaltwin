@@ -142,3 +142,159 @@
   0% { transform: scale(1.05); filter: drop-shadow(0 0 5px rgba(249, 115, 22, 0.4)); }
   100% { transform: scale(1.1); filter: drop-shadow(0 0 15px rgba(249, 115, 22, 0.6)); }
 }
+
+/* ─── Landing Page ─── */
+
+.landing-page {
+  --landing-bg: #060814;
+  --landing-bg-alt: #0B1020;
+  --landing-accent-start: #5B8CFF;
+  --landing-accent-end: #8A5DFF;
+  --landing-text: #FFFFFF;
+  --landing-text-secondary: #A6ADC8;
+  --landing-glass: rgba(255, 255, 255, 0.05);
+  --landing-border: rgba(255, 255, 255, 0.08);
+  --landing-radius: 20px;
+
+  background: var(--landing-bg);
+  color: var(--landing-text);
+  font-family: "Inter", system-ui, sans-serif;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.landing-glass {
+  background: var(--landing-glass);
+  border: 1px solid var(--landing-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: var(--landing-radius);
+}
+
+.landing-btn-primary {
+  @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold text-white rounded-xl transition-all duration-300;
+  background: linear-gradient(135deg, #5B8CFF 0%, #8A5DFF 100%);
+  box-shadow: 0 0 30px rgba(91, 140, 255, 0.35), 0 4px 20px rgba(138, 93, 255, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+.landing-btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.landing-btn-primary:hover::before {
+  opacity: 1;
+}
+
+.landing-btn-primary:hover {
+  box-shadow: 0 0 50px rgba(91, 140, 255, 0.5), 0 8px 30px rgba(138, 93, 255, 0.35);
+}
+
+.landing-btn-ghost {
+  @apply inline-flex items-center justify-center gap-2 px-6 py-3 font-semibold rounded-xl transition-all duration-300;
+  color: var(--landing-text);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.landing-btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.landing-gradient-text {
+  background: linear-gradient(135deg, #5B8CFF 0%, #8A5DFF 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.landing-label {
+  @apply inline-block text-xs font-semibold uppercase tracking-[0.2em] mb-4;
+  color: var(--landing-accent-start);
+}
+
+.landing-section-title {
+  @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-[1.1];
+  color: var(--landing-text);
+}
+
+.landing-section-subtitle {
+  @apply text-lg md:text-xl max-w-2xl leading-relaxed;
+  color: var(--landing-text-secondary);
+}
+
+.landing-glow-icon {
+  @apply flex items-center justify-center w-14 h-14 rounded-2xl;
+  background: linear-gradient(135deg, rgba(91, 140, 255, 0.2) 0%, rgba(138, 93, 255, 0.2) 100%);
+  box-shadow: 0 0 30px rgba(91, 140, 255, 0.25);
+}
+
+@keyframes landing-float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(0.5deg); }
+}
+
+.landing-float {
+  animation: landing-float 6s ease-in-out infinite;
+}
+
+@keyframes landing-blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+.landing-blob {
+  animation: landing-blob 20s ease-in-out infinite;
+}
+
+.landing-blob-delay {
+  animation: landing-blob 25s ease-in-out infinite reverse;
+}
+
+@keyframes landing-pulse-glow {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(1.1); }
+}
+
+.landing-pulse-glow {
+  animation: landing-pulse-glow 4s ease-in-out infinite;
+}
+
+@keyframes landing-marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.landing-marquee {
+  animation: landing-marquee 30s linear infinite;
+}
+
+.landing-grid-bg {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+.landing-nav-link {
+  @apply text-sm font-medium transition-colors duration-200;
+  color: var(--landing-text-secondary);
+}
+
+.landing-nav-link:hover {
+  color: var(--landing-text);
+}
+
+.landing-particle {
+  @apply absolute rounded-full;
+  background: radial-gradient(circle, rgba(91, 140, 255, 0.8) 0%, transparent 70%);
+  box-shadow: 0 0 6px rgba(91, 140, 255, 0.6);
+}

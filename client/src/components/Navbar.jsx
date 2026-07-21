@@ -10,6 +10,10 @@ const Navbar = ({ isAuthenticated, user, onLogout, darkMode, toggleTheme }) => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+    if (location.pathname === '/' && !isAuthenticated) {
+        return null;
+    }
+
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 10);
         window.addEventListener('scroll', handleScroll);

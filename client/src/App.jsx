@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Outlet } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast'; // Import Toaster
 import Navbar from './components/Navbar';
 import Dashboard from './pages/Dashboard';
@@ -10,7 +10,33 @@ import Simulation from './pages/Simulation';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import AIAssistant from './components/AIAssistant';
+import Landing from './pages/Landing';
 import api from './utils/api';
+
+function Layout({ isAuthenticated, user, handleLogout, darkMode, toggleTheme }) {
+  const location = useLocation();
+  const isLanding = location.pathname === '/' && !isAuthenticated;
+  
+  if (isLanding) {
+    return (
+      <div className="font-sans bg-[#060814] min-h-screen">
+        <Toaster position="top-right" />
+        <Outlet />
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-slate-50 dark:bg-[#020617] text-slate-900 dark:text-slate-100 font-sans">
+      <Toaster position="top-right" />
+      <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} darkMode={darkMode} toggleTheme={toggleTheme} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+        <Outlet />
+      </div>
+      {isAuthenticated && !user?.isAdmin && <AIAssistant user={user} />}
+    </div>
+  );
+}
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -71,22 +97,18 @@ function App() {
 
   return (
     <Router>
-      <div className="min-h-screen bg-slate-50 dark:bg-[#020617] text-slate-900 dark:text-slate-100 font-sans">
-        <Toaster position="top-right" /> {/* Add Toaster */}
-        <Navbar isAuthenticated={isAuthenticated} user={user} onLogout={handleLogout} darkMode={darkMode} toggleTheme={toggleTheme} />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
-          <Routes>
-            <Route path="/login" element={!isAuthenticated ? <Login setAuth={setIsAuthenticated} /> : <Navigate to="/" />} />
-            <Route path="/register" element={!isAuthenticated ? <Register setAuth={setIsAuthenticated} /> : <Navigate to="/" />} />
-            <Route path="/" element={isAuthenticated ? (user?.isAdmin ? <Navigate to="/admin" /> : <Dashboard />) : <Navigate to="/login" />} />
-            <Route path="/input" element={isAuthenticated ? (user?.isAdmin ? <Navigate to="/admin" /> : <InputData />) : <Navigate to="/login" />} />
-            <Route path="/simulation" element={isAuthenticated ? (user?.isAdmin ? <Navigate to="/admin" /> : <Simulation />) : <Navigate to="/login" />} />
-            <Route path="/profile" element={isAuthenticated ? (user?.isAdmin ? <Navigate to="/admin" /> : <Profile />) : <Navigate to="/login" />} />
-            <Route path="/admin" element={isAuthenticated && user?.isAdmin ? <AdminDashboard currentUser={user} /> : <Navigate to="/" />} />
-          </Routes>
-        </div>
-        {isAuthenticated && !user?.isAdmin && <AIAssistant user={user} />}
-      </div>
+      <Routes>
+        <Route element={<Layout isAuthenticated={isAuthenticated} user={user} handleLogout={handleLogout} darkMode={darkMode} toggleTheme={toggleTheme} />}>
+          <Route path="/login" element={!isAuthenticated ? <Login setAuth={setIsAuthenticated} /> : <Navigate to="/dashboard" />} />
+          <Route path="/register" element={!isAuthenticated ? <Register setAuth={setIsAuthenticated} /> : <Navigate to="/dashboard" />} />
+          <Route path="/" element={!isAuthenticated ? <Landing /> : (user?.isAdmin ? <Navigate to="/admin" /> : <Navigate to="/dashboard" />)} />
+          <Route path="/dashboard" element={isAuthenticated ? (user?.isAdmin ? <Navigate to="/admin" /> : <Dashboard />) : <Navigate to="/login" />} />
+          <Route path="/input" element={isAuthenticated ? (user?.isAdmin ? <Navigate to="/admin" /> : <InputData />) : <Navigate to="/login" />} />
+          <Route path="/simulation" element={isAuthenticated ? (user?.isAdmin ? <Navigate to="/admin" /> : <Simulation />) : <Navigate to="/login" />} />
+          <Route path="/profile" element={isAuthenticated ? (user?.isAdmin ? <Navigate to="/admin" /> : <Profile />) : <Navigate to="/login" />} />
+          <Route path="/admin" element={isAuthenticated && user?.isAdmin ? <AdminDashboard currentUser={user} /> : <Navigate to="/dashboard" />} />
+        </Route>
+      </Routes>
     </Router>
   );
 }
